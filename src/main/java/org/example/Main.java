@@ -248,31 +248,81 @@ class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("== 명령 앱 ==");
-        List<WiseSaying> wiseSaying=new ArrayList<>();
+        String context="";
+        String author="";
+        List<WiseSaying> wisesaying=new ArrayList<>();
         int count=0;
-        while(true){
+        while(true) {
             System.out.print("명령) ");
-            String cmd=sc.next();
+            String cmd = sc.next();
 
-            if(cmd.equals("종료")){
+            List<WiseSaying> sortSaying = null;
+
+            if (cmd.equals("종료")) {
                 break;
-            }else if(cmd.equals("등록")){
+            } else if (cmd.equals("등록")) {
                 System.out.print("명언 : ");
-                String context=sc.next();
+                context = sc.next();
                 System.out.print("작가 : ");
-                String author=sc.next();
-                //wiseSaying.add(new WiseSaying(context,author));
+                author = sc.next();
                 count++;
-                System.out.printf("%d번 명언이 등록되었습니다.\n",count);
+                wisesaying.add(new WiseSaying(count, context, author));
+                System.out.println(count + "번 명언이 등록되었습니다.");
+            } else if (cmd.equals("목록")) {
+                System.out.println("---------------------");
+                System.out.println("번호 / 작가 / 명언");
+                sortSaying = wisesaying
+                        .stream()
+                        .sorted(Comparator.comparing(WiseSaying::getCount))
+                        .collect(Collectors.toList());
+
+                for (int i = 0; i < sortSaying.size(); i++) {
+                    sortSaying.get(i).setCount(i);
+                }
+                String output = wisesaying
+                        .stream()
+                        .map(e -> e.getCount()+1 + " / "+e.getContext()+" / "+e.getAuthor()+"\n")
+                        .collect(Collectors.joining(""));
+                System.out.println(output);
+
+            } else if(cmd.equals("삭제?id=1")) {
+                if(wisesaying.isEmpty()){
+                    System.out.println("1번 명언은 존재하지 않습니다.");
+                }
+                else {
+                    int num = 0;
+                    wisesaying.remove(num);
+                    System.out.println("1번 명언이 삭제 되었습니다.");
+                }
+                }
+            else if(cmd.equals("수정?id=2")){
+                String editContext=wisesaying
+                        .stream()
+                        .map(e->e.getContext()+"")
+                        .collect(Collectors.joining(""));
+                String editAuthor=wisesaying
+                        .stream()
+                                .map(e->e.getAuthor()+"")
+                                        .collect(Collectors.joining(""));
+                System.out.println("명언(기존): "+editContext);
+                System.out.print("명언: ");
+                context= sc.next();
+                System.out.println("작가(기존): "+editAuthor);
+                System.out.print("작가: ");
+                author=sc.next();
+                wisesaying.set(0,new WiseSaying(0,context,author));
+
             }
         }
         sc.close();
     }
 }
 class WiseSaying{
+    private int count;
     private String context;
     private String author;
 
+    public int getCount(){return count+=1;}
    public String getContext(){
        return context;
    }
@@ -280,6 +330,8 @@ class WiseSaying{
        return author;
    }
 
+   public void setCount(int count){
+        this.count=count;}
    public void setContext(String context){
        this.context=context;
    }
@@ -288,8 +340,18 @@ class WiseSaying{
        this.author=author;
    }
 
-   public WiseSaying(String context,String author){
-       this.context=context;
+   public WiseSaying(int count, String context,String author){
+        this.count=count;
+        this.context=context;
        this.author=author;
    }
+    @Override
+    public String toString() {
+        return "Data{" +
+                "count=" + count +
+                ", no=" + context +
+                ", author=" + author +
+                '}';
+    }
+
 }
