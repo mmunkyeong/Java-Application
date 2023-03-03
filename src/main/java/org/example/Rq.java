@@ -3,6 +3,7 @@ package org.example;
 import java.util.HashMap;
 import java.util.Map;
 
+// Rq는 Request(요청)이라는 뜻
 public class Rq {
     private String actionCode;
     private Map<String, String> params;
@@ -26,7 +27,7 @@ public class Rq {
             String value = paramStrBits[1];
 
             params.put(key, value);
-        }
+        } // 이곳
     }
 
     public String getActionCode() {
@@ -37,7 +38,7 @@ public class Rq {
         return params.get(name);
     }
 
-    public int getIntParam(String name, int defaultValue) {
+    public long getLongParam(String name, long defaultValue) {
         try {
             return Integer.parseInt(getParam(name));
         } catch (NumberFormatException e) {
