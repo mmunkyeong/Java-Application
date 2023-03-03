@@ -3,49 +3,35 @@ package org.example.wiseSaying.service;
 import org.example.Container;
 import org.example.Rq;
 import org.example.wiseSaying.entity.WiseSaying;
+import org.example.wiseSaying.repository.WiseSayingRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class WiseSayingService {
-    private long lastWiseSayingId;
-    private final List<WiseSaying> wiseSayings;
+    private final WiseSayingRepository wiseSayingRepository;
 
-    public WiseSayingService() {
-        lastWiseSayingId = 0;
-        wiseSayings = new ArrayList<>();
+    public List<WiseSaying> findAll() {
+        return wiseSayingRepository.findAll();
     }
 
     public WiseSaying findById(long id) {
-        for (WiseSaying wiseSaying : wiseSayings) {
-            if (wiseSaying.getId() == id) {
-                return wiseSaying;
-            }
-        }
-
-        return null;
+        return wiseSayingRepository.findById(id);
     }
 
-    public List<WiseSaying> findAll() {
-        return wiseSayings;
+    public WiseSayingService() {
+        wiseSayingRepository = new WiseSayingRepository();
     }
 
     public long write(String content, String authorName) {
-        long id = lastWiseSayingId + 1;
-
-        WiseSaying wiseSaying = new WiseSaying(id, content, authorName);
-        wiseSayings.add(wiseSaying);
-
-        lastWiseSayingId = id; // 방금 새 명언이 생성되었으니, lastWiseSayingId 값을 갱신한다.
-
-        return id;
+        return wiseSayingRepository.write(content, authorName);
     }
 
     public void remove(WiseSaying wiseSaying) {
-        wiseSayings.remove(wiseSaying);
+        wiseSayingRepository.remove(wiseSaying);
     }
 
     public void modify(WiseSaying wiseSaying, String content, String authorName) {
-        wiseSaying.setContent(content);
-        wiseSaying.setAuthorName(authorName);
+        wiseSayingRepository.modify(wiseSaying, content, authorName);
     }
 }
